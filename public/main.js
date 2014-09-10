@@ -60,7 +60,7 @@ function main() {
 
 	M.behaviour("increaseSpeed", function(entity, attributes) {
 
-		var manifold = attributes.get("manifold");d
+		var manifold = attributes.get("manifold");
 
 		if ( manifold && attributes.get("speed") < attributes.get("ball.max.speed") ) {
 
