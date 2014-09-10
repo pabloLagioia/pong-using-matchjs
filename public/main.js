@@ -1,5 +1,6 @@
 function main() {
 
+	//Register attributes
 	M.attribute("mappings", function() {
 		this.up = "up";
 		this.down = "down";
@@ -9,6 +10,7 @@ function main() {
 	M.attribute("ball.inc.speed", 0.25);
 	M.attribute("ball.start.speed", 1);
 
+	//Register Behaviours
 	M.behaviour("moveWithSpeedAndDirection", function(entity, attributes, views) {
 	
 		var speed = attributes.get("speed"),
@@ -68,6 +70,7 @@ function main() {
 
 	});
 
+	//Register displays
 	M.display("pad", {
 		type: "rectangle",
 		x: 0,
@@ -87,6 +90,7 @@ function main() {
 		layer: "world"
 	});
 
+	//Register entities
 	M.entity("pad", {
 
 		"has": ["location", "direction", "speed", "mappings", "collisionGroup"],
@@ -107,7 +111,7 @@ function main() {
 
 	});
 
-	//Player 1
+	//Spawn Player 1
 	M.spawn("pad", function(pad) {
 		
 		var location = pad.attribute("location");
@@ -126,7 +130,7 @@ function main() {
 
 	});
 
-	//Player 2
+	//Spawn Player 2
 	M.spawn("pad", function(pad) {
 		
 		var location = pad.attribute("location");
@@ -145,7 +149,7 @@ function main() {
 
 	});
 
-	//Ball
+	//Spawn Ball
 	M.spawn("ball", function(ball) {
 		
 		var location = ball.attribute("location");
