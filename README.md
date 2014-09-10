@@ -22,4 +22,8 @@ Views or displays are objects that can be rendered.
 ## Entities
 An entity is gathers attributes, behaviours and displays. This will be your final game object.
 
+The main idea here is that you add and remove behaviours to an entity in order to modify the way it behaves. For example if you had a
+behaviour called "takeDamage" which reduced health each time the object gets hit, to make the object invulnerable you just remove
+the "takeDamage" behaviour
+
 *The code in the example should be self explanatory*
