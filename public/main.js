@@ -111,63 +111,73 @@ function main() {
 
 	});
 
-	//Spawn Player 1
-	M.spawn("pad", function(pad) {
-		
-		var location = pad.attribute("location");
-		
-		location.x = 30;
-		location.y = M.getCenter().y;
+	M.registerScene("game", {
 
-		pad.attribute("mappings").up = "up";
-		pad.attribute("mappings").down = "down";
+		onLoad: function() {
 
-		pad.view("pad").setFillStyle("red");
+			//Spawn Player 1
+			M.spawn("pad", function(pad) {
+				
+				var location = pad.attribute("location");
+				
+				location.x = 30;
+				location.y = M.getCenter().y;
 
-		pad.attribute("speed", 2);
+				pad.attribute("mappings").up = "up";
+				pad.attribute("mappings").down = "down";
 
-		pad.attribute("collisionGroup", 1);
+				pad.view("pad").setFillStyle("red");
+
+				pad.attribute("speed", 2);
+
+				pad.attribute("collisionGroup", 1);
+
+			});
+
+			//Spawn Player 2
+			M.spawn("pad", function(pad) {
+				
+				var location = pad.attribute("location");
+				
+				location.x = M.getSize().width - 40;
+				location.y = M.getCenter().y;
+
+				pad.attribute("mappings").up = "w";
+				pad.attribute("mappings").down = "s";
+
+				pad.view("pad").setFillStyle("blue");
+
+				pad.attribute("speed", 2);
+
+				pad.attribute("collisionGroup", 1);
+
+			});
+
+			//Spawn Ball
+			M.spawn("ball", function(ball) {
+				
+				var location = ball.attribute("location");
+				
+				location.x = M.getCenter().x;
+				location.y = M.getCenter().y;
+
+				var direction = ball.attribute("direction");
+
+				direction.x = 1;
+				direction.y = 1;
+
+				ball.attribute("speed", ball.attribute("ball.start.speed"));
+
+				ball.attribute("collisionGroup", 1);
+
+				ball.attribute("preventMoveOnCollision", true);
+
+			});
+
+		}
 
 	});
 
-	//Spawn Player 2
-	M.spawn("pad", function(pad) {
-		
-		var location = pad.attribute("location");
-		
-		location.x = M.getSize().width - 40;
-		location.y = M.getCenter().y;
-
-		pad.attribute("mappings").up = "w";
-		pad.attribute("mappings").down = "s";
-
-		pad.view("pad").setFillStyle("blue");
-
-		pad.attribute("speed", 2);
-
-		pad.attribute("collisionGroup", 1);
-
-	});
-
-	//Spawn Ball
-	M.spawn("ball", function(ball) {
-		
-		var location = ball.attribute("location");
-		
-		location.x = M.getCenter().x;
-		location.y = M.getCenter().y;
-
-		var direction = ball.attribute("direction");
-
-		direction.x = 1;
-		direction.y = 1;
-
-		ball.attribute("speed", ball.attribute("ball.start.speed"));
-
-		ball.attribute("collisionGroup", 1);
-
-		ball.attribute("preventMoveOnCollision", true);
-
-	});
+	M.setScene("game");
 
 }
