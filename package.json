@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "test",
   "dependencies": {
-  	"express": "x"
+    "express": "x"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-githooks": "^0.3.1",
+    "grunt-string-replace": "^0.2.7"
   }
 }
