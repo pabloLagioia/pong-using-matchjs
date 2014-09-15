@@ -27,3 +27,15 @@ behaviour called "takeDamage" which reduced health each time the object gets hit
 the "takeDamage" behaviour
 
 *The code in the example should be self explanatory*
+
+# How to run
+You should be fine with the files in public. But if you wanted to work on the project I suggest you download node and grunt.
+
+To use the Matchjs service for splitting the sources run grunt on the project folder.
+
+To use compiled Matchjs files run grunt prod
+
+The server runs on port 9000 by default so go to http://localhost:9000
+
+If you have downloaded the Matchjs service and Match sources, to get engine files merged you can navigate to http://localhost:8087/match/merged
+You can them update public/Match.js using the result from that service and run "grunt prod" to efectively use the updated files.
