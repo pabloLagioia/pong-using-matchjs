@@ -37,5 +37,5 @@ To use compiled Matchjs files run grunt prod
 
 The server runs on port 9000 by default so go to http://localhost:9000
 
-If you have downloaded the Matchjs service and Match sources, to get engine files merged you can navigate to http://localhost:8087/match/merged
+If you have downloaded the Matchjs service and Match sources, to get engine files merged you can navigate to http://localhost:8086/match/merged
 You can them update public/Match.js using the result from that service and run "grunt prod" to efectively use the updated files.
