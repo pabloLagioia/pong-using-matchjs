@@ -1114,17 +1114,23 @@ var M = window.M || {},
 			//Default spawner
 			var entity = new this.Entity();
 
-			for ( var i = 0; i < entityClass.has.length; i++ ) {
-				entity.has(entityClass.has[i]);
+			if ( entityClass.has ) {
+				for ( var i = 0; i < entityClass.has.length; i++ ) {
+					entity.has(entityClass.has[i]);
+				}
 			}
 
-			for ( var i = 0; i < entityClass.does.length; i++ ) {
-				entity.does(entityClass.does[i]);
+			if ( entityClass.does ) {
+				for ( var i = 0; i < entityClass.does.length; i++ ) {
+					entity.does(entityClass.does[i]);
+				}
 			}
 
-			for ( var i = 0; i < entityClass.displays.length; i++ ) {
-				var display = this.display(entityClass.displays[i]);
-				entity.views.set(entityClass.displays[i], display);
+			if ( entityClass.displays ) {
+				for ( var i = 0; i < entityClass.displays.length; i++ ) {
+					var display = this.display(entityClass.displays[i]);
+					entity.views.set(entityClass.displays[i], display);
+				}
 			}
 
 			entity.name = name;
@@ -1160,12 +1166,23 @@ var M = window.M || {},
 			}
 		}
 
+		addSystem.to("world");
+
+		return entity;
+
 	};
 	Match.prototype.registerScene = function(name, value) {
 		if ( this.game.scenes[name] == undefined ) {
 			this.game.scenes[name] = value;
 		} else {
 			this.logger.warn("There is already a scene named ", name);
+		}
+	};
+	Match.prototype.scene = function(name, value) {
+		if ( arguments.length == 2 ) {
+			this.registerScene(name, value);
+		} else {
+			return this.getScene(name);
 		}
 	};
 	Match.prototype.unregisterScene = function(name) {
@@ -1266,8 +1283,8 @@ var M = window.M || {},
 		
 		// while ( this._lag > this._msPerUpdate ) {
 		
-			this._updateInput(p);
 			this.updateGameObjects(this._gameObjects, p);
+			this._updateInput(p);
 			this.updateTriggers(this._triggers);
 			// this._lag -= this._msPerUpdate;
 
@@ -1571,7 +1588,7 @@ var M = window.M || {},
 		var scene = this.getScene(name);
 
 		if ( scene ) {
-			this.logger.log("Loading scene by name ", name);
+			this.logger.log("Loading scene by name", name);
 		} else {
 			this.logger.error("Unable to load scene by name", name, "It could not be found");
 			return;
@@ -5563,7 +5580,7 @@ var M = window.M || {},
 
 			for (; i < l; i++ ) {
 
-			renderizable = views[i];
+				renderizable = views[i];
 
 				if ( this.isOverPolygon(renderizable) && this.isOverPixelPerfect(renderizable) ) {
 					this.select(entity);
@@ -8078,9 +8095,10 @@ var M = window.M || {},
 	
 		this.DEFAULT_COMPOSITE_OPERATION = 0;
 		this.DEFAULT_ALPHA = 1;
-		this.DEFAULT_SHADOW_OFFSET_X = 0;
-		this.DEFAULT_SHADOW_OFFSET_Y = 0;
-		this.DEFAULT_SHADOW_BLUR = 0;
+		this.DEFAULT_SHADOW_OFFSET_X = this.frontBuffer.shadowOffsetX;
+		this.DEFAULT_SHADOW_OFFSET_Y = this.frontBuffer.shadowOffsetY;
+		this.DEFAULT_SHADOW_COLOR = this.frontBuffer.shadowColor;
+		this.DEFAULT_SHADOW_BLUR = this.frontBuffer.shadowBlur;
 
 		this.shadowBlur = this.DEFAULT_SHADOW_BLUR;
 		this.shadowOffsetX = this.DEFAULT_SHADOW_OFFSET_X;
@@ -8164,34 +8182,54 @@ var M = window.M || {},
 	 * @param {StandardEntityRenderer} context
 	 */
 	StandardEntityRenderer.prototype._applyShadow = function(object, context) {
+		// if ( object._shadow ) {
+		// 	var s = object._shadow;
+		// 	context.shadowOffsetX = this.shadowOffsetX = s.x;
+		// 	context.shadowOffsetY = this.shadowOffsetY = s.y;
+		// 	context.shadowBlur = this.shadowBlur = s.blur;
+		// 	context.shadowColor = s.color;
+		// 	this.shadowChanged = true;
+		// } else if (this.shadowChanged) {
+		// 	this.resetShadow(context);
+		// }
+
+		context.shadowBlur = this.DEFAULT_SHADOW_BLUR;
+		context.shadowOffsetX = this.DEFAULT_SHADOW_OFFSET_X;
+		context.shadowOffsetY = this.DEFAULT_SHADOW_OFFSET_Y;
+		context.shadowColor = this.DEFAULT_SHADOW_COLOR;
+		
 		if ( object._shadow ) {
 			var s = object._shadow;
-			context.shadowOffsetX = this.shadowOffsetX = s.x;
-			context.shadowOffsetY = this.shadowOffsetY = s.y;
-			context.shadowBlur = this.shadowBlur = s.blur;
+			context.shadowOffsetX = s.x;
+			context.shadowOffsetY = s.y;
+			context.shadowBlur = s.blur;
 			context.shadowColor = s.color;
-			context.shadowChanged = false;
-		} else if (this.shadowChanged) {
-			this.resetShadow(context);
 		}
+
 	};
 	/**
 	 * @method resetShadow
 	 * @abstract
 	 */
 	StandardEntityRenderer.prototype.resetShadow = function(context) {
-		if ( this.shadowChanged ) {
-			if ( this.shadowBlur != this.DEFAULT_SHADOW_BLUR ) {
-				context.shadowBlur = this.shadowBlur = this.DEFAULT_SHADOW_BLUR;
-			}
-			if ( this.shadowOffsetX != this.DEFAULT_SHADOW_BLUR ) {
-				context.shadowOffsetX = this.shadowOffsetX = this.DEFAULT_SHADOW_OFFSET_X;
-			}
-			if ( this.shadowOffsetY != this.DEFAULT_SHADOW_OFFSET_Y ) {
-				context.shadowOffsetY = this.shadowOffsetY = this.DEFAULT_SHADOW_OFFSET_Y;
-			}
-			this.shadowChanged = false;
-		}
+		// if ( this.shadowChanged ) {
+			// if ( this.shadowBlur != this.DEFAULT_SHADOW_BLUR ) {
+			// 	context.shadowBlur = this.shadowBlur = this.DEFAULT_SHADOW_BLUR;
+			// }
+			// if ( this.shadowOffsetX != this.DEFAULT_SHADOW_BLUR ) {
+			// 	context.shadowOffsetX = this.shadowOffsetX = this.DEFAULT_SHADOW_OFFSET_X;
+			// }
+			// if ( this.shadowOffsetY != this.DEFAULT_SHADOW_OFFSET_Y ) {
+			// 	context.shadowOffsetY = this.shadowOffsetY = this.DEFAULT_SHADOW_OFFSET_Y;
+			// }
+			// this.shadowChanged = false;
+		// }
+
+		context.shadowBlur = this.DEFAULT_SHADOW_BLUR;
+		context.shadowOffsetX = this.DEFAULT_SHADOW_OFFSET_X;
+		context.shadowOffsetY = this.DEFAULT_SHADOW_OFFSET_Y;
+		context.shadowColor = this.DEFAULT_SHADOW_COLOR;
+
 	};
 	StandardEntityRenderer.prototype.setRenderingAlphaTime = function(alphaTime) {
 		this._alphaTime = alphaTime;
@@ -8538,7 +8576,8 @@ var M = window.M || {},
 			}
 			
 			context.strokeStyle = renderizable._strokeStyle;
-			context.stroke( -renderizable._halfWidth, -renderizable._halfHeight, renderizable._width, renderizable._height );
+			// context.stroke( -renderizable._halfWidth, -renderizable._halfHeight, renderizable._width, renderizable._height );
+			context.stroke();
 			
 		}
 
@@ -10995,6 +11034,10 @@ var M = window.M || {},
 		this._changed = true;
 		this.raiseEvent("familyChanged", value);
 	};
+
+	Text.prototype.setFont = Text.prototype.setFamily;
+
+	Text.prototype.getFont = Text.prototype.getFamily;
 	/**
 	 * Sets the font size
 	 *
